@@ -1,0 +1,141 @@
+\section{Исходный код для дополнительного задания}
+\label{appendix:appendixB}
+
+\textbf{Исходный код для дополнительного задания можно найти по ссылке: \href{https://github.com/edelwiw/FourierDrawing}{GitHub}} 
+
+\begin{lstlisting}[style=python_white, caption={Скалярное произведение на интервале [1, 0]}, label=lst:scalar_product_cat, belowskip=-0.8\baselineskip]
+def scalar_product(f, g, number_of_points):
+    x = np.linspace(0, 1, number_of_points)
+    dx = x[1] - x[0]
+    return np.dot(f(x), g(x)) * dx
+\end{lstlisting}
+Аргументы функции \texttt{scalar\_product}: \texttt{f} и \texttt{g} -- функции, для которых вычисляется скалярное произведение, \texttt{number\_of\_points} -- количество точек, на которое разбивается кривая из картинки. 
+\newline
+
+\begin{lstlisting}[style=python_white, caption={Вычисление коэффициентов Фурье}, label=lst:fourier_cat, belowskip=-0.8\baselineskip]
+def fourier_exp(func, number_of_points, N):
+    c = []
+    for i in range(-N, N + 1):
+        exp = lambda x: np.e ** (-1j * 2 * np.pi * i * x)
+        c.append((scalar_product(func, exp, number_of_points), i))
+    return c
+\end{lstlisting}
+Аргументы функции \texttt{fourier\_exp}: \texttt{func} -- функция, для которой вычисляются коэффициенты, \texttt{number\_of\_points} -- количество точек, на которое разбивается кривая из картинки, \texttt{N} -- количество коэффициентов.
+\newline
+
+\begin{lstlisting}[style=python_white, caption={Разложение линии по Фурье}, label=lst:spline_decomposition, belowskip=-0.8\baselineskip]
+def spline_decomposition(spline, scale, number_of_points, number_of_components):
+    path = svg.path.parse_path(spline)
+    path_func = np.vectorize(lambda t: path.point(t) * scale)
+
+    c = fourier_exp(path_func, number_of_points, number_of_components)
+    return c
+\end{lstlisting}
+Аргументы функции \texttt{spline\_decomposition}: \texttt{spline} -- кривая, для которой проводится разложение, \texttt{scale} -- масштаб, \texttt{number\_of\_points} -- количество точек, на которое разбивается кривая из картинки, \texttt{number\_of\_components} -- количество коэффициентов.
+\newline
+
+\begin{lstlisting}[style=python_white, caption={Получение радиуса и начального положения}, label=lst:get_length_and_start_proportion, belowskip=-0.8\baselineskip]
+def get_length_and_start_proportion(c):
+    length = np.sqrt(c.real ** 2 + c.imag ** 2)
+    prop = math.atan2(-c.imag, c.real) 
+    if prop < 0: prop += 2 * math.pi
+    prop /= 2 * math.pi
+    return length, prop
+\end{lstlisting}
+Аргументы функции \texttt{get\_length\_and\_start\_proportion}: \texttt{c} -- коэффициент ряда Фурье. 
+\newline
+
+\begin{lstlisting}[style=python_white, caption={Получение частичной суммы ряда Фурье}, label=lst:fourierise_exp_cat, belowskip=-0.8\baselineskip]
+def fourier_exp_func(c, N):
+    return lambda x: sum([c[i + len(c) // 2][0] * np.e ** (1j * 2 * np.pi * i * x)  for i in range(-N, N + 1)])
+
+def fourierise_exp(func, number_of_points, N):
+    c = fourier_exp(func, number_of_points, N)
+    return fourier_exp_func(c, N)
+\end{lstlisting}
+Аргументы функции \texttt{fourierise\_exp}: \texttt{func} -- функция, для которой проводится разложение, \texttt{number\_of\_points} -- количество точек, на которое разбивается кривая из картинки, \texttt{N} -- количество коэффициентов.
+\newline
+
+\begin{lstlisting}[style=python_white, label=lst:rotating_circle, caption={Исходный код класса окружности}]
+class RotatingCircle(Circle):
+    def __init__(self, radius, frequency, initial_dot_position, parent, **kwargs):
+        super().__init__(radius=radius, **kwargs)
+        self.parent = parent
+        self.frequency = frequency
+        self.dot_position = initial_dot_position
+
+        if parent is not None:
+            self.move_to(parent.point_from_proportion(parent.dot_position % 1))
+\end{lstlisting}
+
+
+\begin{lstlisting}[style=python_white, label=lst:dot_on_circle, caption={Исходный код класса точки на окружности}]
+class DotOnCircle(Dot):
+    def __init__(self, inner_circle, **kwargs):
+        super().__init__(**kwargs)
+        self.inner_circle = inner_circle
+
+        if inner_circle is not None:
+            self.move_to(inner_circle.point_from_proportion(inner_circle.dot_position % 1))
+\end{lstlisting}
+
+
+\begin{lstlisting}[style=python_white, label=lst:vector_in_cicle, caption={Исходный код класса вектора внутри окружности}]
+class VectorInCircle(Arrow):
+    def __init__(self, inner_circle, **kwargs):
+        super().__init__(start=inner_circle.get_center(), end=inner_circle.point_from_proportion(inner_circle.dot_position % 1))
+        self.inner_circle = inner_circle
+\end{lstlisting}
+
+
+\begin{lstlisting}[style=python_white, caption={Исходрый код основного класса анимации}, label=lst:manim]
+class Drawing(ZoomedScene):
+    def construct(self):
+        self.camera.frame.set(width=15 * frame_scale)
+
+        def rotating_circle_updater(circle, dt):
+            circle.dot_position += (dt * circle.frequency) # change on circle dot position 
+            if circle.parent is not None:
+                circle.move_to(circle.parent.point_from_proportion(circle.parent.dot_
+                position % 1)) # move center to parent circle dot position 
+
+        def dot_on_circle_updater(dot, dt):
+            if dot.inner_circle is not None:
+                dot.move_to(dot.inner_circle.point_from_
+                proportion(dot.inner_circle.dot_position % 1))
+
+        def vector_in_circle_updater(vector, dt):
+            vector.put_start_and_end_on(vector.inner_circle.get_center(),
+             vector.inner_circle.point_from_proportion(vector.inner_circle.dot_position % 1))
+
+
+        coefficients = spline_decomposition(spline, scale, number_of_points, number_of_components)
+        coefficients.sort(key=lambda x: np.sqrt(x[0].real ** 2 + x[0].imag ** 2), reverse=True) # sort by length
+        # coefficients.sort(key=lambda x: x[1]) # sort by frequency 
+
+        components = []
+
+        for coefficient in coefficients:
+            r, a = get_length_and_start_proportion(coefficient[0])
+            n = coefficient[1] / time_scale
+            if n == 0: continue
+
+            c = RotatingCircle(r, n, a, components[-1][0] if len(components) > 0 else None, color=WHITE, stroke_width=0.5)
+            # d = DotOnCircle(c, color=BLUE)
+            v = VectorInCircle(c, color=WHITE)
+
+            c.add_updater(rotating_circle_updater)
+            # d.add_updater(dot_on_circle_updater)
+            v.add_updater(vector_in_circle_updater)
+
+            components.append([c, v])
+
+        for i in range(len(components)):
+            self.add(components[i][0], components[i][1])
+            
+
+        trace = TracedPath(components[-1][1].get_end, stroke_color=BLUE, stroke_width=5, dissipating_time=4.8)
+        self.add(trace)
+
+        self.wait(10) 
+\end{lstlisting}

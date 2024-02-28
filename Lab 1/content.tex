@@ -1,0 +1,53 @@
+\section{Разложение в ряд Фурье}
+
+В общем случае частичная сумма ряда Фурье выглядит следующим образом: 
+\begin{equation}
+    F_N(t) = \frac{a_0}{2} + \sum\limits_{n=1}^{N} \left( a_n \cos(\omega_n t) + b_n \sin(\omega_n t) \right)
+    \label{eq:fourier}
+\end{equation}
+\begin{equation}
+    a_n = \frac{2}{T} \int\limits_{h}^{h + T} f(t) \cos(\omega_n t) dt ~~~~ b_n = \frac{2}{T} \int\limits_{h}^{h + T} f(t) \sin(\omega_n t) dt 
+    \label{eq:fourier_coefficients}
+\end{equation}
+где $\omega_n = 2\pi n / T$, $h$ -- начало промежутка, на котором проводится разложение, $T$ -- период функции.
+
+Или, для комплексного случая:
+\begin{equation}
+    G_N(t) = \sum\limits_{n = -N}^{N} c_n e^{i \omega_n t}
+    \label{eq:fourier_exp}
+\end{equation}
+\begin{equation}
+    c_n = \frac{1}{T}\int\limits_{h}^{h+T} f(t) e^{-i \omega_i t} dt 
+    \label{eq:fourier_coefficients_exp}
+\end{equation}
+где $\omega_n = 2\pi n / T$,  $h$ -- начало промежутка, на котором проводится разложение, $T$ -- период функции.
+
+
+\section{Вещественные функции}
+
+\input{square_wave} % добавить расчет значений c 
+\clearpage
+
+\input{even_func.tex} % чиназес 
+\clearpage
+
+\input{odd_func}
+\clearpage
+
+\input{non_oddeven_func.tex}
+\clearpage
+
+\subsection{Анализ результатов}
+Как и ожидалось, с увеличением количества коэффициентов график частичной суммы ряда Фурье (см. формулы~\ref{eq:fourier}~и~\ref{eq:fourier_exp}) 
+все точнее приближают исходную функцию. При этом, у функции, которая терпит разрывы первого рода в точках, наблюдаются \textit{выбросы} в этих точках. 
+Это связано с тем, что частичная сумма ряда Фурье не сходится к функции равномерно, а сходится по норме. 
+
+Графики частичных сумм ряда Фурье для вещественного и комплексного случая не отличаются. 
+
+\section{Комплексная функция}
+\input{complex_func.tex}
+\clearpage
+\newpage
+
+\section{Дополнительное задание}
+\input{additional.tex}
