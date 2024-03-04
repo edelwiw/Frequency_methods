@@ -3,13 +3,13 @@
 
 \textbf{Исходный код для дополнительного задания можно найти по ссылке: \href{https://github.com/edelwiw/FourierDrawing}{GitHub}} 
 
-\begin{lstlisting}[style=python_white, caption={Скалярное произведение на интервале [1, 0]}, label=lst:scalar_product_cat, belowskip=-0.8\baselineskip]
-def scalar_product(f, g, number_of_points):
+\begin{lstlisting}[style=python_white, caption={Скалярное произведение на интервале [1, 0]}, label=lst:dot_product_cat, belowskip=-0.8\baselineskip]
+def dot_product(f, g, number_of_points):
     x = np.linspace(0, 1, number_of_points)
     dx = x[1] - x[0]
     return np.dot(f(x), g(x)) * dx
 \end{lstlisting}
-Аргументы функции \texttt{scalar\_product}: \texttt{f} и \texttt{g} -- функции, для которых вычисляется скалярное произведение, \texttt{number\_of\_points} -- количество точек, на которое разбивается кривая из картинки. 
+Аргументы функции \texttt{dot\_product}: \texttt{f} и \texttt{g} -- функции, для которых вычисляется скалярное произведение, \texttt{number\_of\_points} -- количество точек, на которое разбивается кривая из картинки. 
 \newline
 
 \begin{lstlisting}[style=python_white, caption={Вычисление коэффициентов Фурье}, label=lst:fourier_cat, belowskip=-0.8\baselineskip]
@@ -17,7 +17,7 @@ def fourier_exp(func, number_of_points, N):
     c = []
     for i in range(-N, N + 1):
         exp = lambda x: np.e ** (-1j * 2 * np.pi * i * x)
-        c.append((scalar_product(func, exp, number_of_points), i))
+        c.append((dot_product(func, exp, number_of_points), i))
     return c
 \end{lstlisting}
 Аргументы функции \texttt{fourier\_exp}: \texttt{func} -- функция, для которой вычисляются коэффициенты, \texttt{number\_of\_points} -- количество точек, на которое разбивается кривая из картинки, \texttt{N} -- количество коэффициентов.

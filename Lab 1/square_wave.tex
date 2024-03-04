@@ -50,19 +50,13 @@
 \begin{equation}
     c_n = \frac{1}{3}\int\limits_{1}^{4} f_1(t)e^{\frac{-i 2\pi n t}{3}} dt = \frac{1}{3}\left(\int\limits_{1}^{2}e^{\frac{-i 2\pi n t}{3}}dt + \int\limits_{2}^{4}2e^{\frac{-i 2\pi n t}{3}}dt \right) 
 \end{equation}
+Так как коэффициенты $a_n$, $b_n$ и $c_n$ связаны между собой, а $c_i$ и $c_{-i}$ равны для вещественной функции, нет необходимости вычислять $c_n$ отдельно. (Мне просто лень). 
 \begin{equation}
-    \int e^{\frac{-i 2\pi n t}{3}}dt = \int e^u \frac{-3}{2\pi n i} du = \frac{-3}{2\pi n i} \int e^u du = \frac{-3}{2\pi n i} e^\frac{-i2\pi n t}{3}
-    \notag
+    c_n = \frac{a_n - ib_n}{2}
 \end{equation}
-\begin{multline}
-    c_n = \frac{-1}{\pi n i}\left(\frac{1}{2} e^\frac{-i2\pi n t}{3} \Big|_{1}^{2} + e^\frac{-i2\pi n t}{3} \Big|_{2}^{4}\right) =  \frac{-1}{\pi ni} \left( \frac{1}{2}\left(e^\frac{-i4\pi n}{3} - e^\frac{-i2\pi n}{3} \right) + e^\frac{-i8\pi n}{3} - e^\frac{-i4\pi n}{3} \right)\\ = 
-    -\frac{1 + e^{\frac{26\pi n}{3}} - 2e^{\frac{28\pi n}{3}}}{2\pi n e^{\frac{14\pi n}{3}}i} 
-\end{multline}
-пупупу
-
 После подстановки получаем следующие значения:
 \begin{equation}
-    a_0 = \frac{2}{3} \int\limits_{1}^{4} f_1(t) dt = \frac{2}{3} \left( \int\limits_{1}^{2} dt + \int\limits_{2}^{4} 2 dt \right) = \frac{2}{3} \left(t\Big|_{1}^{2} + 2t\Big|_{2}^{4}\right) = \frac{2}{3} (1 + 4) = \frac{10}{3}
+    a_0 = \frac{2}{3} \int\limits_{1}^{4} f_1(t) dt = \frac{2}{3} \left( \int\limits_{1}^{2} dt + \int\limits_{2}^{4} 2 dt \right) = \frac{2}{3} \left(t\Big|_{1}^{2} + 2t\Big|_{2}^{4}\right) = \frac{2}{3} (1 + 4) = \frac{10}{3} \approx 3.33333
 \end{equation}
 
 \begin{equation}
@@ -82,7 +76,15 @@
 \end{equation}
 
 \begin{equation}
-    c_0 = 
+    c_0 = \frac{a_0}{2} = \frac{10}{6} \approx 1.66667
+\end{equation}
+
+\begin{equation}
+    c_{-1} = c_1 = \frac{a_1 - b_1}{2} = \frac{\sqrt3}{6} \approx 0.28868
+\end{equation}
+
+\begin{equation}
+    c_{-2} = c_2 = \frac{a_2 - b_2}{2} = \frac{-\sqrt{3}}{4\pi} \approx -0.13784
 \end{equation}
 
 \subsubsection{Вычисление коэффициентов Фурье с помощью программы}
@@ -173,3 +175,32 @@ calc_and_plot_exp(func, 1, 3, [1, 2, 5, 15, 30], './media/plots/func_1_exp')
 Видим, что при увеличении $N$ график частичной суммы ряда Фурье приближается к исходной функции. При $N = 5$ график частичной суммы ряда Фурье уже довольно хорошо приближает исходную функцию. 
 
 На графиках заметны \textit{выбросы} в точках разрыва. Это связано с тем, что ряд Фурье сходится к функции по норме, но не обязательно в каждой точке. 
+
+\FloatBarrier
+\subsubsection{Проверка равенства Парсеваля}
+
+Проверим равенство Парсеваля для функции $f_1(t)$:
+
+\begin{equation}
+    ||f_1||^2 = 2\pi \sum\limits_{n = -\infty}^{\infty} |c_n|^2 
+\end{equation}
+
+\begin{equation}
+    ||f_1||^2 = \pi \left(\frac{a_0^2}{2} + \sum\limits_{n = 0}^{\infty}  (a_n^2 + b_n^2) \right)
+\end{equation}
+
+Для этого воспользуемся функцией \texttt{perseval\_check} (см. листинг~\ref{lst:perseval_check}).
+Мною была рассмотрена сумма трехсот коэффициентов. Этого оказалось достаточно для равенства квадрата нормы и суммы до 3 знака. 
+
+\begin{table}[ht!]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        $||f_1||^2$ & $2\pi \sum\limits_{n = -\infty}^{300} |c_n|^2$ & $\pi \left(\frac{a_0^2}{2} + \sum\limits_{n = 1}^{300} (a_n^2 + b_n^2)\right)$\\
+        \hline
+        19.13296 & 19.13141 & 19.13141\\
+        \hline
+    \end{tabular}
+    \caption{Проверка равенства Персеваля для функции $f_1(t)$}
+    \label{tab:func_1_pers}
+\end{table}

@@ -32,7 +32,7 @@
 
 \begin{multline}
     c_n = \frac{1}{4}\int\limits_{-0.5}^{3.5} f_5(t) e^{-i \frac{\pi nt}{2}} dt = \frac{1}{4} ( \int\limits_{-0.5}^{0.5} (3 + 6ti)e^{-i \frac{\pi nt}{2}} dt + \int\limits_{0.5}^{1.5} (6 - 6t + 3i)e^{-i \frac{\pi nt}{2}} dt \\
-    + \int\limits_{1.5}^{2.5}(-3 + (12 - 6t)i) e^{-i \frac{\pi nt}{2}} dt + \int\limits_{2.5}^{3.5}(-18 + 6t - 3i) e^{-i \frac{\pi nt}{2}} dt )
+    + \int\limits_{1.5}^{2.5}(-3 + (12 - 6t)i) e^{-i \frac{\pi nt}{2}} dt + \int\limits_{2.5}^{3.5}(-18 + 6t - 3i) e^{-i \frac{\pi nt}{2}} dt ) 
 \end{multline}
 
 \subsubsection{Вычисление коэффициентов Фурье с помощью программы}
@@ -114,6 +114,27 @@ print_fourier_exp_coefficients(c)
 При значениях $N = 1, 2$ график частичной суммы ряда Фурье представляет из себя эллипс, при $N = 3$ -- уже похож на исходную функцию.
 При значениях $N = 10$ график частичной суммы ряда Фурье довольно точно повторяет исходную функцию.
 
+\FloatBarrier
+\subsubsection{Проверка равенства Парсеваля}
+
+Проверим равенство Парсеваля для функции $f_5(t)$:
+
+Для этого воспользуемся функцией \texttt{perseval\_check} (см. листинг~\ref{lst:perseval_check}).
+Мною была рассмотрена сумма трехсот коэффициентов. Этого оказалось достаточно для равенства квадрата нормы и суммы до 1 знака после запятой. 
+
+\begin{table}[ht!]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        $||f_5||^2$ & $2\pi \sum\limits_{n = -\infty}^{300} |c_n|^2$ \\
+        \hline
+        74.62291 & 74.57936 \\
+        \hline
+    \end{tabular}
+    \caption{Проверка равенства Персеваля для функции $f_5(t)$}
+    \label{tab:func_5_pers}
+\end{table}
+
 \subsection{Графики вещественной и комплексной части отдельно}
 
 Рассмотрим графики $Re~f_5(t)$ и $Im~f_5(t)$ (см. рис.~\ref{fig:func_5_re_im}) и графики $Re~G_n(t)$ и $Im~G_n(t)$  для функции $f_5(t)$ (см. рис.~\ref{fig:func_5_fourier_re_im_N_1}~-~\ref{fig:func_5_fourier_re_im_N_10}).
@@ -169,3 +190,4 @@ print_fourier_exp_coefficients(c)
 \end{figure}
 
 Тут так же заметно, что с увеличением значения $N$ график частичной суммы ряда Фурье все точнее приближает исходную функцию на выбранном промежутке. 
+

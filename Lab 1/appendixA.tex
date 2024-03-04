@@ -1,13 +1,15 @@
 \section{Исходный код}
 \label{appendix:source}
 
-\begin{lstlisting}[style=python_white, caption=Функция для вычисления скалярного произведения функций, label=lst:scalar_product]
-def scalar_product(f, g, a, b):
+\textbf{Исходный код можно найти по ссылке: \href{https://github.com/edelwiw/Frequency_methods}{GitHub}} 
+
+\begin{lstlisting}[style=python_white, caption=Функция для вычисления скалярного произведения функций, label=lst:dot_product]
+def dot_product(f, g, a, b):
     x = np.linspace(a, b, 10000)
     dx = x[1] - x[0]
     return np.dot(f(x), g(x)) * dx
 \end{lstlisting}
-Аргументы функции \texttt{scalar\_product}: \texttt{f} и \texttt{g} -- функции, для которых вычисляется скалярное произведение, \texttt{a} и \texttt{b} -- границы интегрирования.
+Аргументы функции \texttt{dot\_product}: \texttt{f} и \texttt{g} -- функции, для которых вычисляется скалярное произведение, \texttt{a} и \texttt{b} -- границы интегрирования.
 \newline
 
 \begin{lstlisting}[style=python_white, caption=Функция для получения вспомогательных функций, label=lst:get_sincosmt]
@@ -37,8 +39,8 @@ def fourier(func, t0, T, N):
         sin = lambda x: sinmt([i, x])
         cos = lambda x: cosmt([i, x])
 
-        a.append(scalar_product(func, cos, t0, t0 + T) * 2 / T)
-        b.append(scalar_product(func, sin, t0, t0 + T) * 2 / T)
+        a.append(dot_product(func, cos, t0, t0 + T) * 2 / T)
+        b.append(dot_product(func, sin, t0, t0 + T) * 2 / T)
     return a, b
 \end{lstlisting}
 Аргументы функции \texttt{fourier}: \texttt{func} -- функция, для которой вычисляются коэффициенты, \texttt{t0} -- начало промежутка, на котором проводится разложение, \texttt{T} -- период функции, \texttt{N} -- количество коэффициентов.
@@ -50,7 +52,7 @@ def fourier_exp(func, t0, T, N):
     c = []
     for i in range(-N, N + 1):
         exp = lambda x: expmt([-i, x])
-        c.append(scalar_product(func, exp, t0, t0 + T) / T)
+        c.append(dot_product(func, exp, t0, t0 + T) / T)
 
     return c
 \end{lstlisting}
@@ -196,6 +198,19 @@ def print_fourier_exp_coefficients(c):
 \end{lstlisting}
 Аргументы функции \texttt{print\_fourier\_coefficients\_exp}: \texttt{c}-- коэффициенты Фурье.
 \newline
+
+\begin{lstlisting}[style=python_white, caption=Функция для проверки равенства Персеваля, label=lst:perseval_check]
+def perseval_check(func, N):
+    norm_squared = dot_product(func, func, -np.pi, np.pi)
+    a, b = fourier(func, -np.pi, 2 * np.pi, N)
+    c = fourier_exp(func, -np.pi, 2 * np.pi, N)
+    c_sum = 2 * np.pi * sum(abs(c[i]) ** 2 for i in range(len(c)))
+    ab_sum = np.pi * (a[0] ** 2 / 2 + sum([a[i] ** 2 + b[i] ** 2 for i in range(1, N + 1)]))
+    print(f'Norm squared: {norm_squared:.5f}, \tSum of |c_i|^2: {c_sum:.5f}, \tSum of |a_i|^2 + |b_i|^2: {ab_sum:.5f}')
+\end{lstlisting}
+Аргументы функции \texttt{perseval\_check}: \texttt{func} -- функция, для которой проверяется равенство Персеваля, \texttt{N} -- количество коэффициентов $N$.
+\newline
+
 
 \begin{lstlisting}[style=python_white, caption=Пример работы с функциями, label=lst:example1, belowskip=-0.8\baselineskip]
 func = np.vectorize(lambda x: 1 if 0 <= (x - 1) % 3 < 1 else 2)
