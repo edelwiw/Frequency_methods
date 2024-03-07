@@ -154,21 +154,14 @@ def calc_and_plot_parametric(func, t0, T, N, title):
 
 
 def perseval_check(func, N):
-    norm_squared = dot_product(func, func, -np.pi, np.pi)
-    a, b = fourier(func, -np.pi, 2 * np.pi, N)
-    c = fourier_exp(func, -np.pi, 2 * np.pi, N)
+    abs_func = np.vectorize(lambda x: abs(func(x)))
+    norm_squared = dot_product(abs_func, abs_func, -np.pi, np.pi)
+    a, b = fourier(abs_func, -np.pi, 2 * np.pi, N)
+    c = fourier_exp(abs_func, -np.pi, 2 * np.pi, N)
     c_sum = 2 * np.pi * sum(abs(c[i]) ** 2 for i in range(len(c)))
     ab_sum = np.pi * (a[0] ** 2 / 2 + sum([a[i] ** 2 + b[i] ** 2 for i in range(1, N + 1)]))
     print(f'Norm squared: {norm_squared:.5f}, \tSum of |c_i|^2: {c_sum:.5f}, \tSum of |a_i|^2 + |b_i|^2: {ab_sum:.5f}')
-
-
-def perseval_check_exp(func, N, t0, T):
-    f = np.vectorize(lambda x: abs(func(x)))
-    norm_squared = dot_product(f, f, -np.pi, np.pi)
-    c = fourier_exp(func, -np.pi, 2 * np.pi, N)
-    c_sum = 2 * np.pi * sum(abs(c[i]) ** 2 for i in range(len(c)))
-    print(f'Norm squared: {norm_squared:.5f}, \tSum of |c_i|^2: {c_sum:.5f}')
-
+    return abs(norm_squared - c_sum), abs(norm_squared - ab_sum)
 
 R = 3
 T = 4
@@ -201,69 +194,61 @@ def func5(t):
 # Example 1
 func = np.vectorize(lambda x: 1 if 0 <= (x - 1) % 3 < 1 else 2)
 print("Func 1")
-# a, b = fourier(func, 1, 3, 3)
-# print_fourier_coefficients(a, b)
-# c = fourier_exp(func, 1, 3, 3)
-# print_fourier_exp_coefficients(c)
-# perseval_check(func, 300)
-# calc_and_plot(func, 1, 3, [1, 2, 5, 15, 30], './media/plots/func_1')
-# calc_and_plot_exp(func, 1, 3, [1, 2, 5, 15, 30], './media/plots/func_1_exp')
-# calc_and_plot(func, -np.pi, 2 * np.pi, [1, 2, 5, 15, 30], './media/plots/func')
-# calc_and_plot_exp(func, -np.pi, 2 * np.pi, [1, 2, 5, 15, 30], './media/plots/func')
+a, b = fourier(func, 1, 3, 3)
+print_fourier_coefficients(a, b)
+c = fourier_exp(func, 1, 3, 3)
+print_fourier_exp_coefficients(c)
+perseval_check(func, 300)
+calc_and_plot(func, 1, 3, [1, 2, 5, 15, 30], './media/plots/func_1')
+calc_and_plot_exp(func, 1, 3, [1, 2, 5, 15, 30], './media/plots/func_1_exp')
 
 # Example 2
 func = np.vectorize(lambda x: np.sin(5/2 * np.cos(x)))
 print("Func 2")
-# a, b = fourier(func, -np.pi, 2*np.pi, 3)
-# print_fourier_coefficients(a, b)
-# c = fourier_exp(func, -np.pi, 2*np.pi, 3)
-# print_fourier_exp_coefficients(c)
-# perseval_check(func, 300)
-# calc_and_plot(func, -np.pi, 2 * np.pi, [1, 2, 3, 4, 5], './media/plots/func')
-# calc_and_plot_exp(func, -np.pi, 2 * np.pi, [1, 2, 3, 4, 5], './media/plots/func')
+a, b = fourier(func, -np.pi, 2*np.pi, 3)
+print_fourier_coefficients(a, b)
+c = fourier_exp(func, -np.pi, 2*np.pi, 3)
+print_fourier_exp_coefficients(c)
+perseval_check(func, 300)
+calc_and_plot(func, -np.pi, 2 * np.pi, [1, 2, 3, 4, 5], './media/plots/func')
+calc_and_plot_exp(func, -np.pi, 2 * np.pi, [1, 2, 3, 4, 5], './media/plots/func')
 
 # # Example 3
 func = np.vectorize(lambda x: abs(np.cos(2 * x) * np.sin(x)))
 print("Func 3")
-# a, b = fourier(func, 0, np.pi, 3)
-# print_fourier_coefficients(a, b)
-# c = fourier_exp(func, 0, np.pi, 3)
-# print_fourier_exp_coefficients(c)
-# perseval_check(func, 300)
-# calc_and_plot(func, 0, np.pi, [1, 2, 3, 4, 5], './media/plots/func_3')
-# calc_and_plot_exp(func, 0, np.pi, [1, 2, 3, 4, 5], './media/plots/func_3_exp')
-# calc_and_plot(func, -np.pi, 2 * np.pi, [1, 2, 3, 4, 5], './media/plots/func')
-# calc_and_plot_exp(func, -np.pi, 2 * np.pi, [1, 2, 3, 4, 5], './media/plots/func')
-
+a, b = fourier(func, 0, np.pi, 3)
+print_fourier_coefficients(a, b)
+c = fourier_exp(func, 0, np.pi, 3)
+print_fourier_exp_coefficients(c)
+perseval_check(func, 300)
+calc_and_plot(func, 0, np.pi, [1, 2, 3, 4, 5], './media/plots/func_3')
+calc_and_plot_exp(func, 0, np.pi, [1, 2, 3, 4, 5], './media/plots/func_3_exp')
 
 # # Example 4
 func = np.vectorize(lambda x: np.sin(x) ** 3 - np.cos(x))
 print("Func 4")
-# a, b = fourier(func, 0, 2 * np.pi, 3)
-# print_fourier_coefficients(a, b)
-# c = fourier_exp(func, 0, 2 * np.pi, 3)
-# print_fourier_exp_coefficients(c)
-# perseval_check(func, 300)
-# calc_and_plot(func, 0, 2 * np.pi, [1, 2, 3, 4, 5], './media/plots/func_4') 
-# calc_and_plot_exp(func, 0, 2 * np.pi, [1, 2, 3, 4, 5], './media/plots/func_4_exp')
-# calc_and_plot(func, -np.pi, 2 * np.pi, [1, 2, 3, 4, 5], './media/plots/func') 
-# calc_and_plot_exp(func, -np.pi, 2 * np.pi, [1, 2, 3, 4, 5], './media/plots/func')
-
+a, b = fourier(func, 0, 2 * np.pi, 3)
+print_fourier_coefficients(a, b)
+c = fourier_exp(func, 0, 2 * np.pi, 3)
+print_fourier_exp_coefficients(c)
+perseval_check(func, 300)
+calc_and_plot(func, 0, 2 * np.pi, [1, 2, 3, 4, 5], './media/plots/func_4') 
+calc_and_plot_exp(func, 0, 2 * np.pi, [1, 2, 3, 4, 5], './media/plots/func_4_exp')
 
 # Example 5
 func = np.vectorize(func5)
-perseval_check_exp(func, 300, -T/8, T)
-# c = fourier_exp(func, -T/8, T, 3)
-# print_fourier_exp_coefficients(c)
+perseval_check(func, 300)
+c = fourier_exp(func, -T/8, T, 3)
+print_fourier_exp_coefficients(c)
 calc_and_plot_parametric(func, -T/8, T, [1, 2, 3, 5, 10], './media/plots/func_5')
 
-# plot_func(lambda x: func(x).real, lambda x: func(x).real, -T/8, T, 'Source function (Re)', f'./media/plots/func_5_real')
-# plot_func(lambda x: func(x).imag, lambda x: func(x).imag, -T/8, T, 'Source function (Im)', f'./media/plots/func_5_imag')
+plot_func(lambda x: func(x).real, lambda x: func(x).real, -T/8, T, 'Source function (Re)', f'./media/plots/func_5_real')
+plot_func(lambda x: func(x).imag, lambda x: func(x).imag, -T/8, T, 'Source function (Im)', f'./media/plots/func_5_imag')
 
-# for n in [1, 2, 3, 5, 10]:
-#     fourier_func = fourierise_exp(func, -T/8, T, n)
-#     plot_func(lambda x: func(x).real, lambda x: fourier_func(x).real, -T/8, T, f'Fourier function (Re), N = {n}', f'./media/plots/func_5_real_N_{n}')
-#     plot_func(lambda x: func(x).imag, lambda x: fourier_func(x).imag, -T/8, T, f'Fourier function (Im), N = {n}', f'./media/plots/func_5_imag_N_{n}')
+for n in [1, 2, 3, 5, 10]:
+    fourier_func = fourierise_exp(func, -T/8, T, n)
+    plot_func(lambda x: func(x).real, lambda x: fourier_func(x).real, -T/8, T, f'Fourier function (Re), N = {n}', f'./media/plots/func_5_real_N_{n}')
+    plot_func(lambda x: func(x).imag, lambda x: fourier_func(x).imag, -T/8, T, f'Fourier function (Im), N = {n}', f'./media/plots/func_5_imag_N_{n}')
 
 
 plt.show()
