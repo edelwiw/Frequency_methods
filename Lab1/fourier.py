@@ -20,29 +20,29 @@ def dot_product(f: "first function", g: "second function", a: "lower limit", b: 
 
 def get_sincosmt(T: "period"):
     '''
-        Function to get sin(omega * t) and cos(omega * t) functions
+        Function to get sin(n * omega * t) and cos(n * omega * t) functions
 
         T - period
 
-        result: sin(2 * pi * x[0] / T * x[1]), cos(2 * pi * x[0] / T * x[1])
+        result: sin(2 * pi * n / T * t), cos(2 * pi * n / T * t)
     '''
 
-    sinmt = lambda x: np.sin(2 * np.pi * x[0] / T * x[1])
-    cosmt = lambda x: np.cos(2 * np.pi * x[0] / T * x[1])
+    sinmt = lambda n, t: np.sin(2 * np.pi * n / T * t)
+    cosmt = lambda n, t: np.cos(2 * np.pi * n / T * t)
 
     return sinmt, cosmt
 
 
 def get_expmt(T: "period"):
     '''
-        Function to get e^(i * omega * t) function
+        Function to get e^(n * omega * t) function
 
         T - period
 
-        result: e^(i * 2 * pi * x[0] / T * x[1])
+        result: e^(i * 2 * pi * n / T * t)
     '''
 
-    return lambda x: np.e ** (1j * 2 * np.pi * x[0] / T * x[1])
+    return lambda n, t: np.e ** (1j * 2 * np.pi * n / T * t)
 
 
 # calculate fourier coefficients
@@ -60,9 +60,9 @@ def fourier_coefficients(func: "source function", t0: "lower limit", T: "period"
     sinmt, cosmt = get_sincosmt(T)
     a = []
     b = []
-    for i in range(N + 1):
-        sin = lambda x: sinmt([i, x])
-        cos = lambda x: cosmt([i, x])
+    for n in range(N + 1):
+        sin = lambda t: sinmt(n, t)
+        cos = lambda t: cosmt(n, t)
 
         a.append(dot_product(func, cos, t0, t0 + T) * 2 / T)
         b.append(dot_product(func, sin, t0, t0 + T) * 2 / T)
@@ -83,8 +83,8 @@ def fourier_exp_coefficients(func: "source function", t0: "lower limit", T: "per
 
     expmt = get_expmt(T)
     c = []
-    for i in range(-N, N + 1):
-        exp = lambda x: expmt([-i, x])
+    for n in range(-N, N + 1):
+        exp = lambda t: expmt(-n, t)
         c.append(dot_product(func, exp, t0, t0 + T) / T)
 
     return c
@@ -124,7 +124,7 @@ def fourier_func(a, b, T: "period"):
     '''
 
     sinmt, cosmt = get_sincosmt(T)
-    return lambda t: a[0] / 2 + sum([a[i] * cosmt([i, t]) + b[i] * sinmt([i, t]) for i in range(1, len(a))])
+    return lambda t: a[0] / 2 + sum([a[n] * cosmt(n, t) + b[n] * sinmt(n, t) for n in range(1, len(a))])
 
 
 def fourier_exp_func(c, T: "period"):
@@ -138,7 +138,7 @@ def fourier_exp_func(c, T: "period"):
     '''
 
     expmt = get_expmt(T)
-    return lambda x: sum([c[i + len(c) // 2] * expmt([i, x]) for i in range(-(len(c) // 2), len(c) // 2)])
+    return lambda t: sum([c[n + len(c) // 2] * expmt(n, t) for n in range(-(len(c) // 2), len(c) // 2)])
 
 
 def fourierise(func: "source function", t0: "lower limit", T: "period", N: "number of coefficients"):
