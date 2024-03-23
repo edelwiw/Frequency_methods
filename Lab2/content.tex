@@ -1,0 +1,45 @@
+\section{Преобразование Фурье}
+
+Рассмотрим унитарное преобразование Фурье к угловой частоте $\omega$:
+\begin{equation}
+    \hat{f}(\omega) = \frac{1}{\sqrt{2\pi}} \int_{-\infty}^{\infty} f(t) e^{-i\omega t} dt
+    \label{eq:image_from_function}
+\end{equation}
+
+Обратное преобразование Фурье:
+\begin{equation}
+    f(t) = \frac{1}{\sqrt{2\pi}} \int_{-\infty}^{\infty} \hat{f}(\omega) e^{i\omega t} d\omega
+    \label{eq:function_from_image}
+\end{equation}
+
+Равенство Парсеваля:
+\begin{equation}
+    \int_{-\infty}^{\infty} |f(t)|^2 dt = \int_{-\infty}^{\infty} |\hat{f}(\omega)|^2 d\omega
+    \label{eq:parseval_indentity}
+\end{equation}
+
+
+\section{Вещественные функции}
+\input{rectangle}
+\FloatBarrier
+
+\input{triangle}
+\FloatBarrier
+
+\input{sinc} 
+\FloatBarrier
+
+\input{gaussian}
+\FloatBarrier
+
+\input{fade}
+\FloatBarrier
+
+\section{Комплексная функция}
+\input{moved_rectangle}
+
+\section{Анализ аккорда}
+\input{chord}
+\FloatBarrier
+
+
