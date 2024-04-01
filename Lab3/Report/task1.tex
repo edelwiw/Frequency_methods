@@ -1,0 +1,22 @@
+\subsection{Исходная функция}
+
+Для выполнения задания рассмотрим функцию $g(t)$, которая задается следующим образом: 
+\begin{equation}
+    g(t) = \begin{cases}
+        a, & t \in [t_1, t_2]\\
+        0, & otherwise
+    \end{cases}
+\end{equation}
+
+Кроме того, зададим \textit{зашумленную} версию функции $u(t)$ 
+\begin{equation}
+    u(t) = g(t) + b(\rand(t) - 0.5) + c(\sin(d * t))  
+    \label{eq:noise}
+\end{equation}
+
+Для расчетов будем использовать массив из 1000 точек, соответствущих значениям функции $u(t)$ на интервале $[-T/2,~T/2]$.
+
+
+\input{high_freq.tex}
+\input{spec_freq.tex}
+\input{low_freq.tex}
