@@ -96,7 +96,7 @@ def calc(a, b, c, d, t1, t2, T, image_limits, clip_function=clip_outer_image_val
     noised_wave = apply_noise_to_values(X, wave, b=b, c=c, d=d) # get noised wave function values
 
     plot_func(X, wave, f'Wave function', f'./results/{n}/wave_function', legend=["Source function"]) # source function 
-    plot_func(X, noised_wave, f'Wave function {n} with noise', f'./results/{n}/noised_wave_function', legend=["Noised function"]) # noised function
+    plot_func(X, noised_wave, f'Wave function with noise', f'./results/{n}/noised_wave_function', legend=["Noised function"]) # noised function
 
     V = np.linspace(-image_limits, image_limits, 1000)
 
