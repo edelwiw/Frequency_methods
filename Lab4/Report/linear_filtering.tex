@@ -1,0 +1,22 @@
+\section{Линейные фильтры}
+
+Для выполнения задания рассмотрим функцию $g(t)$, которая задается следующим образом: 
+\begin{equation}
+    g(t) = \begin{cases}
+        a, & t \in [t_1, t_2]\\
+        0, & otherwise
+    \end{cases}
+\end{equation}
+
+Кроме того, зададим \textit{зашумленную} версию функции $u(t)$ 
+\begin{equation}
+    u(t) = g(t) + b(\rand(t) - 0.5) + c(\sin(d \cdot t))  
+    \label{eq:noise}
+\end{equation}
+
+
+\input{first_order_filters.tex}
+
+\FloatBarrier
+\input{spetial_filter.tex}
+
