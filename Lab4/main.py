@@ -119,7 +119,7 @@ get_first_order_filter = lambda T: tf2zpk([0, 1], [T, 1])
 get_second_order_filter = lambda T1, T2, T3: tf2zpk([T1 ** 2, 2 * T1, 1], [T2 * T3, T2 + T3, 1])
 
 
-def first_task(T):
+def spectral_diff(T):
     if not os.path.exists(f'./results/{T}'):
         os.makedirs(f'./results/{T}')
 
@@ -217,9 +217,8 @@ def filter_quotes(file_path, T, n=0):
 
 # FIRST TASK 
 
-# first_task(T=10)
-# first_task(T=100)
-
+# spectral_diff(T=10)
+# spectral_diff(T=100)
 
 
 # SECOND TASK 
@@ -230,7 +229,6 @@ def filter_quotes(file_path, T, n=0):
 
 # filtering(a=10, b=1, c=0, d=0, t1=1, t2=4, L=10, F=10, filter=get_first_order_filter(T=0.3), n=4)
 # filtering(a=30, b=1, c=0, d=0, t1=1, t2=4, L=10, F=10, filter=get_first_order_filter(T=0.3), n=5)
-
 
 
 # THIRD TASK
@@ -251,14 +249,13 @@ def filter_quotes(file_path, T, n=0):
 # filtering(a=4, b=0, c=2, d=80, t1=1, t2=4, L=10, F=10, filter=get_second_order_filter(T1=1/W0, T2=A/W0, T3=1/(A * W0)), n=9)
 
 
-
 # FOURTH TASK
 
-filter_quotes(file_path='./SBER.csv', T=1, n=1)
-filter_quotes(file_path='./SBER.csv', T=7, n=2)
-filter_quotes(file_path='./SBER.csv', T=30, n=3)
-filter_quotes(file_path='./SBER.csv', T=90, n=4)
-filter_quotes(file_path='./SBER.csv', T=356, n=5)
+# filter_quotes(file_path='./SBER.csv', T=1, n=1)
+# filter_quotes(file_path='./SBER.csv', T=7, n=2)
+# filter_quotes(file_path='./SBER.csv', T=30, n=3)
+# filter_quotes(file_path='./SBER.csv', T=90, n=4)
+# filter_quotes(file_path='./SBER.csv', T=356, n=5)
 
 
 
