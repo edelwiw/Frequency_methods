@@ -48,8 +48,8 @@ def plot_complex_func(func, t0, t1, caption = '', title = ''):
     plt.ylim(ymin, ymax)
     plt.plot(x, func(x).real)
     plt.plot(x, func(x).imag)
-    plt.xlabel('\u03C9')
-    plt.ylabel('f(\u03C9)')
+    plt.xlabel('v')
+    plt.ylabel('f(v)')
     plt.legend(['Real', 'Imag'], loc='upper right')
     # add caption
     plt.title(caption)
@@ -244,7 +244,7 @@ plot_complex_func(sinc_2_image, -5, 5, caption='Fourier image of sinc function (
 # print(f'Parseval check for sinc 2: {parseval_check(sinc_2, a=-100, b=100)}')
 
 # sinc 3
-sinc_3 = np.vectorize(lambda t: sinc(t, a=2, b=2), otypes=[np.complex_])
+sinc_3 = np.vectorize(lambda t: sinc(t, a=2, b=0.5), otypes=[np.complex_])
 plot_func(sinc_3, -30, 30, caption='Sinc function (a = 2, b = 2)', title='media/sinc_3')
 
 sinc_3_image = fourier_image(sinc_3, -5, 5)

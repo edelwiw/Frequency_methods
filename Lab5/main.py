@@ -220,7 +220,7 @@ def interpolation(func: callable, dt, steps, B, dir='interpolation', num=0):
 sinsin = lambda x: 3 * np.sin(2 *np.pi * x + np.pi) + 2 * np.sin(6 * np.pi * x - 5)
 sinc = lambda x: np.sinc(2 * x)
 
-# interpolation(sinsin, dt=1/8, steps=100, B=4, num=1) 
+interpolation(sinsin, dt=1/8, steps=100, B=4, num=1) 
 # interpolation(sinsin, dt=1/4, steps=100, B=6, num=2)
 # interpolation(sinsin, dt=1/12, steps=100, B=6, num=3)
 # interpolation(sinc, dt=1/4, steps=100, B=2, num=4)
